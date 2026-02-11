@@ -372,17 +372,28 @@
         // Validação do nome - mínimo 3 caracteres
         if (nome.length < 3) {
             document.getElementById('errorNome').classList.add('show');
+            document.getElementById('errorNome').textContent = 'Nome deve ter no mínimo 3 caracteres';
             hasError = true;
         }
 
-        // Validação do telefone - exatamente 11 dígitos (DDD + 9 dígitos)
+        // Validação do telefone - exatamente 11 dígitos
         if (telefone.length !== 11) {
             document.getElementById('errorTelefone').classList.add('show');
+            if (telefone.length === 0) {
+                document.getElementById('errorTelefone').textContent = 'Por favor, digite seu telefone';
+            } else if (telefone.length < 11) {
+                document.getElementById('errorTelefone').textContent = 'Telefone incompleto. Digite os 11 dígitos (DDD + número)';
+            } else {
+                document.getElementById('errorTelefone').textContent = 'Telefone deve ter exatamente 11 dígitos';
+            }
             hasError = true;
         }
 
-        // Se houver erro, para aqui
-        if (hasError) return;
+        // Se houver erro, para aqui e não envia
+        if (hasError) {
+            console.log('Validação falhou:', { nome: nome.length, telefone: telefone.length });
+            return;
+        }
 
         // Desabilitar botão
         submitBtn.disabled = true;
@@ -420,4 +431,5 @@
 </script>
 </body>
 </html>
+
 
