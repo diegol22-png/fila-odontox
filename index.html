@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila Virtual - OdontoX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a85454 0%, #8b3a3a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            background: #faf8f6;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            padding: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+            background: #faf8f6;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .logo img {
+            max-width: 220px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 2px 8px rgba(168, 84, 84, 0.15));
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #fef5f3 0%, #fdeae8 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid #a85454;
+        }
+
+        .welcome p {
+            color: #5a3232;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .welcome strong {
+            color: #8b3a3a;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8e3df;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #ffffff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a85454;
+            box-shadow: 0 0 0 3px rgba(168, 84, 84, 0.1);
+            background: #ffffff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #a85454 0%, #8b3a3a 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(168, 84, 84, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .success-message h2 {
+            color: #a85454;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .success-message p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .queue-number {
+            font-size: 42px;
+            font-weight: bold;
+            color: #a85454;
+            margin: 15px 0;
+            text-shadow: 0 2px 4px rgba(168, 84, 84, 0.2);
+        }
+
+        .error {
+            color: #c0392b;
+            font-size: 13px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        /* Scrollbar customizada */
+        .container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #f1efed;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #a85454;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #8b3a3a;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 25px 20px;
+                max-height: 98vh;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+
+            .logo img {
+                max-width: 180px;
+            }
+
+            .welcome {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .welcome p {
+                font-size: 13px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            input {
+                padding: 11px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .success-icon {
+                font-size: 50px;
+            }
+
+            .success-message h2 {
+                font-size: 20px;
+            }
+
+            .queue-number {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .container {
+                padding: 20px;
+            }
+
+            .logo {
+                margin-bottom: 12px;
+                padding: 6px;
+            }
+
+            .logo img {
+                max-width: 160px;
+            }
+
+            .welcome {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .welcome p {
+                font-size: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            input {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .btn {
+                padding: 11px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.imgur.com/rFcVJVI.png" alt="OdontoX">
+        </div>
+
+        <div id="formSection">
+            <div class="welcome">
+                <p><strong>Bem-vindo à Fila Virtual da OdontoX!</strong><br>
+                É um prazer recebê-los. Por favor, preencha seus dados para entrar na fila de atendimento.</p>
+            </div>
+
+            <form id="queueForm">
+                <div class="form-group">
+                    <label for="nome">Nome Completo *</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Digite seu nome">
+                    <span class="error" id="errorNome">Por favor, digite seu nome</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone">Telefone com DDD *</label>
+                    <input type="tel" id="telefone" name="telefone" required placeholder="Ex.: 21999999999" maxlength="11">
+                    <span class="error" id="errorTelefone">Digite um telefone válido (ex: 21999999999)</span>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Entrar na Fila</button>
+            </form>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="success-icon">✅</div>
+            <h2>Cadastro Realizado!</h2>
+            <p>Você foi adicionado à fila com sucesso.</p>
+            <div class="queue-number" id="queueNumber">-</div>
+            <p><strong>Sua posição na fila</strong></p>
+            <p>Em breve você receberá uma confirmação via WhatsApp.</p>
+            <p style="margin-top: 15px; color: #999; font-size: 13px;">Aguarde ser chamado!</p>
+        </div>
+    </div>
+
+<script>
+    // URL do webhook do n8n
+    const WEBHOOK_URL = 'https://n8n.dfxsolutions.com.br/webhook-test/fila-cadastro-odontox';
+
+    const form = document.getElementById('queueForm');
+    const formSection = document.getElementById('formSection');
+    const successSection = document.getElementById('successSection');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Máscara para telefone
+    document.getElementById('telefone').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        e.target.value = value;
+    });
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Limpar erros anteriores
+        document.querySelectorAll('.error').forEach(el => el.classList.remove('show'));
+
+        const nome = document.getElementById('nome').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
+
+        // Validações
+        let hasError = false;
+
+        if (nome.length < 3) {
+            document.getElementById('errorNome').classList.add('show');
+            hasError = true;
+        }
+
+        // Validação de telefone sem regex problemática
+        const apenasNumeros = /
+^
+\d+
+$
+/.test(telefone);
+        if (telefone.length !== 11 || !apenasNumeros) {
+            document.getElementById('errorTelefone').classList.add('show');
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        // Desabilitar botão
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processando...';
+
+        try {
+            console.log('Enviando dados:', { nome, telefone });
+
+            const response = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    telefone: telefone,
+                    dataHora: new Date().toISOString()
+                })
+            });
+
+            console.log('Status da resposta:', response.status);
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Resultado:', result);
+
+                // Mostrar mensagem de sucesso
+                document.getElementById('queueNumber').textContent = result.posicao || '1';
+                formSection.style.display = 'none';
+                successSection.classList.add('show');
+            } else {
+                const errorText = await response.text();
+                console.error('Erro do servidor:', errorText);
+                throw new Error('Erro ao processar cadastro');
+            }
+        } catch (error) {
+            console.error('Erro completo:', error);
+            alert('Erro ao entrar na fila: ' + error.message + '\n\nVerifique o console para mais detalhes.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Entrar na Fila';
+        }
+    });
+</script>
+</body>
+</html>
