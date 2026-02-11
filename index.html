@@ -352,12 +352,39 @@
     const successSection = document.getElementById('successSection');
     const submitBtn = document.getElementById('submitBtn');
 
+    // Máscara para telefone - só permite números
+    document.getElementById('telefone').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        e.target.value = value;
+    });
+
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const nome = document.getElementById('nome').value;
-        const telefone = document.getElementById('telefone').value;
+        // Limpar erros anteriores
+        document.querySelectorAll('.error').forEach(el => el.classList.remove('show'));
 
+        const nome = document.getElementById('nome').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
+
+        let hasError = false;
+
+        // Validação do nome - mínimo 3 caracteres
+        if (nome.length < 3) {
+            document.getElementById('errorNome').classList.add('show');
+            hasError = true;
+        }
+
+        // Validação do telefone - exatamente 11 dígitos (DDD + 9 dígitos)
+        if (telefone.length !== 11) {
+            document.getElementById('errorTelefone').classList.add('show');
+            hasError = true;
+        }
+
+        // Se houver erro, para aqui
+        if (hasError) return;
+
+        // Desabilitar botão
         submitBtn.disabled = true;
         submitBtn.textContent = 'Processando...';
 
@@ -378,13 +405,14 @@
 
             const result = await response.json();
 
+            // Mostrar mensagem de sucesso
             document.getElementById('queueNumber').textContent = result.posicao || '1';
             formSection.style.display = 'none';
             successSection.classList.add('show');
 
         } catch (error) {
             console.error('Erro:', error);
-            alert('Erro: ' + error.message);
+            alert('Erro ao entrar na fila. Tente novamente.');
             submitBtn.disabled = false;
             submitBtn.textContent = 'Entrar na Fila';
         }
@@ -392,3 +420,4 @@
 </script>
 </body>
 </html>
+
